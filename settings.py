@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -15,7 +17,7 @@ class Settings(BaseSettings):
     db_host: str = Field('postgres-bot', env='DB_HOST')
     db_port: int = Field(5432, env='DB_PORT')
     db_user: str = Field('postgres', env='DB_USER')
-    db_password: str = Field(None, env='DB_PASSWORD')
+    db_password: Optional[str] = Field(None, env='DB_PASSWORD')
     db_name: str = Field('postgres', env='DB_NAME')
     db_data: str = Field('/var/lib/postgresql/data/pgdata', env='DB_DATA')
 

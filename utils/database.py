@@ -49,6 +49,7 @@ class Database:
     async def fetchval(self, sql: str):
         return await self.pool.fetchval(sql)
 
+
 settings = Settings()
 
 db = Database(

@@ -1,0 +1,9 @@
+TG_BOT_TOKEN=123
+PRICE_SERVICE_URL=https://min-api.cryptocompare.com
+PRICE_SERVICE_API_KEY=5844106d798f2ca7c95727dff36e86c9c8f5730f00d2b37e3d72808ee076262b
+DB_HOST=postgres-bot
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=test
+DB_NAME=postgres
+DB_DATA=/var/lib/postgresql/data/pgdata
