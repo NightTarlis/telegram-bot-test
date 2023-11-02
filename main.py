@@ -22,6 +22,7 @@ async def post_init(app: Application) -> None:
     # fixme: решил не использовать алхимию, из-за этого не успел прикрутить алембик/аналог
     await run_migration(db)
 
+
 async def post_stop(app: Application) -> None:
     await db.close_connection()
 

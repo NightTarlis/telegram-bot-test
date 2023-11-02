@@ -12,7 +12,7 @@ class Settings(BaseSettings):
         '5844106d798f2ca7c95727dff36e86c9c8f5730f00d2b37e3d72808ee076262b', env='PRICE_SERVICE_API_KEY'
     )
 
-    db_host: str = Field('0.0.0.0', env='DB_HOST')
+    db_host: str = Field('postgres-bot', env='DB_HOST')
     db_port: int = Field(5432, env='DB_PORT')
     db_user: str = Field('postgres', env='DB_USER')
     db_password: str = Field(None, env='DB_PASSWORD')

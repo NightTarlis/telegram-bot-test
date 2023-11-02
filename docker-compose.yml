@@ -9,10 +9,11 @@ services:
     env_file:
       - .env
     environment:
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_DB=${DB_NAME}
-      - PGDATA=${DB_DATA}
+      POSTGRES_HOST_AUTH_METHOD: 'trust'
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+      PGDATA: ${DB_DATA}
     networks:
       - 'bot'
     ports:
@@ -20,7 +21,7 @@ services:
     volumes:
       - /usr/src/app/data:/var/lib/postgresql/data/pgdata
 
-  bot:
+  telegram_bot:
     container_name: telegram_bot
     build: .
     restart: always
@@ -28,8 +29,6 @@ services:
       - .env
     networks:
       - 'bot'
-    links:
-      - postgres
     depends_on:
       - postgres
 
