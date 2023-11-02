@@ -20,6 +20,7 @@ async def exchange(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def report(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    # fixme: по хорошему reply_html + jinja, но нужно понимать как выглядит
     await update.message.reply_text(await ReportInteractor(db).execute(update.effective_user.id))
 
 
