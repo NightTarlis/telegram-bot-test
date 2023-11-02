@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+
+  postgres:
+    container_name: postgres-bot
+    image: postgres:12-alpine
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+      - PGDATA=${DB_DATA}
+    networks:
+      - 'bot'
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - /usr/src/app/data:/var/lib/postgresql/data/pgdata
+
+  bot:
+    container_name: telegram_bot
+    build: .
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - 'bot'
+    links:
+      - postgres
+    depends_on:
+      - postgres
+
+networks:
+  bot:
+    driver: bridge

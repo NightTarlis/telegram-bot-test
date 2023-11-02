@@ -1,0 +1,4 @@
+from adapters.repositories.user_balances import UserBalanceRepository
+from adapters.repositories.exchange_request import ExchangeRequestRepository
+from adapters.repositories.currency import CurrencyRepository
+from adapters.repositories.repository import BaseRepository
