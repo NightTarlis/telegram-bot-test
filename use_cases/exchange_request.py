@@ -1,8 +1,6 @@
 import datetime
 import logging
 
-from telegram import Message
-
 from adapters.repositories import ExchangeRequestRepository, UserBalanceRepository, CurrencyRepository
 from adapters.services import PriceRequestService
 from custom_exceptions import PriceServiceException
