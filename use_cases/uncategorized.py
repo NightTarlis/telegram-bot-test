@@ -1,6 +1,7 @@
 import datetime
 
 from adapters.repositories.exchange_request import ExchangeRequestRepository
+from entities.dto import MessageDTO
 from entities.entities import ExchangeRequest, UserRequestStatusEnum
 from settings import Settings
 from use_cases import BaseInteractor
@@ -10,13 +11,13 @@ settings = Settings()
 
 class UncategorizedInteractor(BaseInteractor):
 
-    async def execute(self, msg_id: int, chat_id: int, msg_text: str, external_user_id: int) -> str:
+    async def execute(self, message: MessageDTO) -> str:
         entity = ExchangeRequest(
-            msg_id=msg_id,
-            external_user_id=external_user_id,
-            chat_id=chat_id,
+            msg_id=message.id,
+            external_user_id=message.external_user_id,
+            chat_id=message.chat_id,
             status=UserRequestStatusEnum.need_moderation.value,
-            msg_text=msg_text
+            msg_text=message.text
         )
 
         await ExchangeRequestRepository(self._db_session).create_exchange_request(entity)

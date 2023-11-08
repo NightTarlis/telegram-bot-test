@@ -6,6 +6,7 @@ from telegram import Message
 from adapters.repositories import ExchangeRequestRepository, UserBalanceRepository, CurrencyRepository
 from adapters.services import PriceRequestService
 from custom_exceptions import PriceServiceException
+from entities.dto import MessageDTO
 from entities.entities import ExchangeRequest, UserRequestStatusEnum, UserBalance
 from settings import Settings
 from use_cases import BaseInteractor
@@ -17,10 +18,8 @@ logger = logging.getLogger(__name__)
 
 class ExchangeRequestInteractor(BaseInteractor):
 
-    async def execute(self, message: Message, external_user_id: int) -> str:
-        operation, amount_from, currency_from, currency_to = await ExchangeRequestRepository.parse_message(
-            message.text
-        )
+    async def execute(self, message: MessageDTO) -> str:
+        operation, amount_from, currency_from, currency_to = await ExchangeRequestRepository.parse_message(message.text)
 
         if operation == 'buy':
             currency_from, currency_to = currency_to, currency_from
@@ -33,7 +32,7 @@ class ExchangeRequestInteractor(BaseInteractor):
 
         entity = ExchangeRequest(
             msg_id=message.id,
-            external_user_id=external_user_id,
+            external_user_id=message.external_user_id,
             chat_id=message.chat_id,
             status=UserRequestStatusEnum.finished.value,
             msg_text=message.text,
@@ -62,14 +61,14 @@ class ExchangeRequestInteractor(BaseInteractor):
         if operation == 'buy':
             amount_to = amount_from * price
         else:
-            amount_to = amount_from * 100_000 / price / 100_000
+            amount_to = amount_from / price
 
         entity.price = amount_to
 
         result = f'Сделка по обмену {currency_from} на {currency_to} состоялась, по цене {amount_to}'
 
         if not await UserBalanceRepository(self._db_session).check_can_user_exchange_currency(
-                UserBalance(external_user_id=external_user_id, currency=currency_from, amount=amount_from)
+                UserBalance(external_user_id=message.external_user_id, currency=currency_from, amount=amount_from)
         ):
             entity.status = UserRequestStatusEnum.failed.value
             result = 'Сделка не состоялась - на балансе недостаточно средств'
@@ -85,10 +84,10 @@ class ExchangeRequestInteractor(BaseInteractor):
                 amount_from, amount_to = amount_to, amount_from
 
             await UserBalanceRepository(self._db_session).update_user_balance(
-                UserBalance(external_user_id=external_user_id, currency=currency_from, amount=-amount_from)
+                UserBalance(external_user_id=message.external_user_id, currency=currency_from, amount=-amount_from)
             )
             await UserBalanceRepository(self._db_session).update_user_balance(
-                UserBalance(external_user_id=external_user_id, currency=currency_to, amount=amount_to)
+                UserBalance(external_user_id=message.external_user_id, currency=currency_to, amount=amount_to)
             )
 
         return result

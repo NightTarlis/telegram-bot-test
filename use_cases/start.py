@@ -1,16 +1,15 @@
-from telegram import User as BotUser
-
 from adapters.repositories.user import UserRepository
+from adapters.repositories.user_balances import UserBalanceRepository
+from entities.dto import UserDTO
 from entities.entities import User, UserBalance
 from settings import Settings
-from adapters.repositories.user_balances import UserBalanceRepository
 from use_cases import BaseInteractor
 
 settings = Settings()
 
 
 class StartInteractor(BaseInteractor):
-    async def execute(self, user: BotUser) -> str:
+    async def execute(self, user: UserDTO) -> str:
 
         user_exist = await UserRepository(self._db_session).check_user_exists(User(external_id=user.id))
         if user_exist:
@@ -38,7 +37,7 @@ class StartInteractor(BaseInteractor):
             reply_text = f'''```
         Здравствуйте, {user.first_name}!
         Это бот для коммуникации c некоторой компанией по вопросам покупки/продажи валют.
-        По умолчанию у каждого клиента есть баланс 10000 usdb.
+        По умолчанию у каждого клиента есть баланс 10000 usdt.
 
         Доступные команды:
         • Для покупки или продажи валюты используйте формат:

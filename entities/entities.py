@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Decimal
 from enum import Enum
 from typing import Optional
 
@@ -28,8 +29,8 @@ class ExchangeRequest(BaseModel):
     msg_text: Optional[str] = Field('')
     currency_from: Optional[str] = Field('')
     currency_to: Optional[str] = Field('')
-    amount: Optional[float] = Field(0)
-    price: Optional[float] = Field(0)
+    amount: Optional[Decimal] = Field('0')
+    price: Optional[Decimal] = Field('0')
     created_at: Optional[datetime] = Field(datetime.utcnow())
     updated_at: Optional[datetime] = Field(datetime.utcnow())
 
@@ -38,7 +39,7 @@ class UserBalance(BaseModel):
     id: Optional[int] = Field(None)
     external_user_id: Optional[int] = Field(0)
     currency: Optional[str] = Field('')
-    amount: Optional[float] = Field(0.0)
+    amount: Optional[Decimal] = Field('0.0')
 
 
 class Currency(BaseModel):
