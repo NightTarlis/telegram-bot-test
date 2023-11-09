@@ -1,5 +1,6 @@
 import datetime
 import logging
+from decimal import Decimal
 
 from adapters.repositories import ExchangeRequestRepository, UserBalanceRepository, CurrencyRepository
 from adapters.services import PriceRequestService
@@ -48,7 +49,7 @@ class ExchangeRequestInteractor(BaseInteractor):
                 'Менеджер нашей компании скоро свяжется с вами для уточнения заявки.'
 
         try:
-            price = await PriceRequestService(settings).get_exchange_price(currency_to, currency_from)
+            price = Decimal(str(await PriceRequestService(settings).get_exchange_price(currency_to, currency_from)))
             if not price:
                 raise PriceServiceException
         except PriceServiceException:
@@ -58,6 +59,7 @@ class ExchangeRequestInteractor(BaseInteractor):
 
         if operation == 'buy':
             amount_to = amount_from * price
+            amount_from, amount_to = amount_to, amount_from
         else:
             amount_to = amount_from / price
 
@@ -78,8 +80,6 @@ class ExchangeRequestInteractor(BaseInteractor):
         await ExchangeRequestRepository(self._db_session).create_exchange_request(entity)
 
         if entity.status == UserRequestStatusEnum.finished.value:
-            if operation == 'buy':
-                amount_from, amount_to = amount_to, amount_from
 
             await UserBalanceRepository(self._db_session).update_user_balance(
                 UserBalance(external_user_id=message.external_user_id, currency=currency_from, amount=-amount_from)

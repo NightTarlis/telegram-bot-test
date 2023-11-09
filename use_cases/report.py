@@ -1,3 +1,4 @@
+import logging
 from decimal import Decimal
 
 from adapters.repositories import UserBalanceRepository
@@ -8,6 +9,8 @@ from use_cases import BaseInteractor
 
 settings = Settings()
 
+logger = logging.getLogger(__name__)
+
 
 class ReportInteractor(BaseInteractor):
 
@@ -16,4 +19,4 @@ class ReportInteractor(BaseInteractor):
             UserBalance(external_user_id=user.id)
         )
 
-        return [f"{i['currency']}: {Decimal(i['amount'])}" for i in actual_balances]
+        return [f"{i['currency']}: {round(Decimal(i['amount']), 6)}" for i in actual_balances]

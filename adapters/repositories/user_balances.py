@@ -1,5 +1,9 @@
+import logging
+
 from adapters.repositories.repository import BaseRepository
 from entities.entities import UserBalance
+
+logger = logging.getLogger(__name__)
 
 
 class UserBalanceRepository(BaseRepository):

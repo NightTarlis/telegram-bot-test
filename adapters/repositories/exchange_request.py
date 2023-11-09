@@ -1,4 +1,5 @@
 import re
+from decimal import Decimal
 from typing import List, Optional
 
 from adapters.repositories.repository import BaseRepository
@@ -19,7 +20,7 @@ class ExchangeRequestRepository(BaseRepository):
         pattern = r'(\w+)\s+([\d.]+)\s+([A-Za-z]+)\s*[-/.\\_ ]\s*([A-Za-z]+)'
         match = re.match(pattern, msg)
         if match:
-            return match.group(1).lower(), float(match.group(2)), match.group(3), match.group(4)
+            return match.group(1).lower(), Decimal(match.group(2)), match.group(3), match.group(4)
         else:
             return None, None, None, None
 
