@@ -41,21 +41,10 @@ async def test_but_btc_from_usdt(
     result = await ExchangeRequestInteractor(db_session).execute(message)
     currency_from, currency_to, amount = 'btc', 'usdt', 34000
 
-    exchange_request = ExchangeRequest(
-        msg_id=message.id,
-        external_user_id=message.external_user_id,
-        chat_id=message.chat_id,
-        status=UserRequestStatusEnum.finished.value,
-        msg_text=message.text,
-        currency_from=currency_from,
-        currency_to=currency_to,
-        amount=amount
-    )
-    user_balance = UserBalance(external_user_id=message.external_user_id, currency=currency_from, amount=amount)
+    user_balance = UserBalance(external_user_id=message.external_user_id, currency=currency_to, amount=amount)
 
-    # user_balance_repository_mock.check_can_user_exchange_currency.assert_called_with(user_balance)
-    # price_service_mock.get_exchange_price.assert_called_with(currency_from, currency_to)
-    # price_service_mock.exchange.assert_called_with(currency_from, currency_to, amount)
-    # exchange_request_repository_mock.create_exchange_request.assert_called_with(exchange_request)
+    user_balance_repository_mock().check_can_user_exchange_currency.assert_called_with(user_balance)
+    price_service_mock().get_exchange_price.assert_called_with(currency_from, currency_to)
+    price_service_mock().exchange.assert_called_with(currency_to, currency_from, amount)
 
-    assert result == 'Сделка по обмену usdt на btc состоялась, по цене 34000.0'
+    assert result == 'Сделка по обмену usdt на btc состоялась, по цене 34000'

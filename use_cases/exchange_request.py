@@ -59,13 +59,15 @@ class ExchangeRequestInteractor(BaseInteractor):
 
         if operation == 'buy':
             amount_to = amount_from * price
-            amount_from, amount_to = amount_to, amount_from
         else:
             amount_to = amount_from / price
 
         entity.price = amount_to
 
         result = f'Сделка по обмену {currency_from} на {currency_to} состоялась, по цене {amount_to}'
+
+        if operation == 'buy':
+            amount_from, amount_to = amount_to, amount_from
 
         if not await UserBalanceRepository(self._db_session).check_can_user_exchange_currency(
                 UserBalance(external_user_id=message.external_user_id, currency=currency_from, amount=amount_from)

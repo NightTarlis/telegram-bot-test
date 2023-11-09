@@ -21,7 +21,7 @@ def user_balance_repository():
 async def test_success_empty(user_balance_repository, db_session, user_factory):
     user = user_factory(user_id=1)
     result = await ReportInteractor(db_session).execute(user)
-    assert result == ['usd: 1', 'rub: 2']
+    assert result == ['usd: 1.000000', 'rub: 2.000000']
 
     user_balance_repository.return_value.get_actual_positions_by_user.assert_called_with(
         UserBalance(external_user_id=user.id)

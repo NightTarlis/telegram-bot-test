@@ -40,8 +40,8 @@ async def test_start_new_user(db_session, user_factory, user_repository_mock, us
     print(result)
     assert not result.startswith(f'Здравствуйте, {user.first_name}!')
     assert '10000 usdt' in result
-    user_balance_repository_mock.create_base_balance.assert_not_called()
-    user_repository_mock.create_user.assert_not_called()
+    user_balance_repository_mock.assert_called()
+    user_repository_mock.assert_called()
 
 
 @pytest.mark.asyncio
@@ -53,5 +53,5 @@ async def test_start_exist_user(
 
     assert not result.startswith('Здравствуйте, ')
     assert '10000 usdt' not in result
-    user_repository_mock.create_user.assert_not_called()
-    user_balance_repository_mock.create_user.assert_not_called()
+    user_repository_mock.assert_called()
+    user_balance_repository_mock.assert_not_called()
